@@ -208,4 +208,4 @@ def handle_get():
 
 if __name__ == "__main__":
     # 0.0.0.0 にすると外部（VPS）からアクセス可能
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=8080)
