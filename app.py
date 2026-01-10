@@ -9,6 +9,8 @@ import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from selenium.webdriver.chrome.options import Options
+
 timetable_true = {"月":["英語講読Ⅰ(3E)","電気回路Ⅰ(3E)","総合数学(3E)","特別講義(3E)"],
                   "火":["解析学Ⅱ(3E)","電気機器Ⅰ(3E)","プログラミングⅡ(3E)","電気磁気学Ⅰ(3E)"],
                   "水":["電子回路Ⅰ(3E)","総合英語(3E)","保健体育Ⅲ(3E)","特活(3E)"],
@@ -16,9 +18,23 @@ timetable_true = {"月":["英語講読Ⅰ(3E)","電気回路Ⅰ(3E)","総合数�
                   "金":["応用物理Ⅰ(3E)","解析学Ⅱ(3E)","国語Ⅲ(3E)","特別講義(3E)"],}
 
 # -----------------------------
-# 1. Chrome を起動
+# 1. Chrome を起動 このPCで
 # -----------------------------
-driver = webdriver.Chrome()
+#driver = webdriver.Chrome()
+
+# -----------------------------
+# 1. Chrome を VPS 用に起動
+# -----------------------------
+options = Options()
+options.add_argument("--headless=new")  # 新しいヘッドレスモード
+options.add_argument("--no-sandbox")  # root 実行時に必須
+options.add_argument("--disable-dev-shm-usage")  # VPS では必須
+options.add_argument("--disable-gpu")
+options.add_argument("--disable-software-rasterizer")
+options.add_argument("--window-size=1920,1080")
+
+driver = webdriver.Chrome(options=options)
+
 
 # -----------------------------
 # 2. ログインページへアクセス
