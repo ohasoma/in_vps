@@ -183,7 +183,9 @@ for date, subjects in timetable.items():
             "expected": expected_norm,
         }
 
-        lst = sorted(subjects_norm)
+        lst = []
+        for subject in subjects_norm:
+            lst.append(subject)
         result = {str(i + 1): v for i, v in enumerate(lst)}
         new_timetable = {"date":date}
         result.update(new_timetable)
