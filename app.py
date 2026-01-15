@@ -10,6 +10,8 @@ import datetime
 import re
 from datetime import datetime, timezone, timedelta
 from selenium.webdriver.chrome.options import Options
+from dotenv import load_dotenv
+import os
 
 timetable_true = {"月":["英語講読Ⅰ(3E)","電気回路Ⅰ(3E)","総合数学(3E)","特別講義(3E)"],
                   "火":["解析学Ⅱ(3E)","電気機器Ⅰ(3E)","プログラミングⅡ(3E)","電気磁気学Ⅰ(3E)"],
@@ -45,8 +47,10 @@ time.sleep(1)
 # -----------------------------
 # 3. ログイン処理
 # -----------------------------
-LOGIN_ID = "e231207"
-PASSWORD = "OhaSoma3141592653"
+load_dotenv()  # .env を読み込む
+
+LOGIN_ID = os.getenv("LOGIN_ID")
+PASSWORD = os.getenv("PASSWORD")
 
 driver.find_element(By.ID, "login-user").send_keys(LOGIN_ID)
 driver.find_element(By.ID, "login-password").send_keys(PASSWORD)
