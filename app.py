@@ -1,14 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from flask import Flask, jsonify
+from flask import Flask
+import json
+from flask import Response
 import time
 from bs4 import BeautifulSoup
 import copy
 import datetime
 import re
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
+from datetime import datetime, timezone, timedelta
 from selenium.webdriver.chrome.options import Options
 
 timetable_true = {"月":["英語講読Ⅰ(3E)","電気回路Ⅰ(3E)","総合数学(3E)","特別講義(3E)"],
@@ -153,12 +153,14 @@ def normalize(s):
 
     return s
 
+# 日本時間（UTC+9）
+JST = timezone(timedelta(hours=9))
 
-jst = datetime.now(ZoneInfo("Asia/Tokyo"))
+now = datetime.now(JST)
+formatted = now.isoformat(timespec="seconds")
 
 diff = {}
-post_items = {"genereted_at":(jst.strftime("%Y-%m-%d %H:%M:%S"))
-}
+TimeTables = {"genereted_at":formatted}
 main_timetable = []
 
 for date, subjects in timetable.items():
@@ -183,15 +185,20 @@ for date, subjects in timetable.items():
             "expected": expected_norm,
         }
 
-        lst = []
-        for subject in subjects_norm:
-            lst.append(subject)
-        result = {str(i + 1): v for i, v in enumerate(lst)}
-        new_timetable = {"date":date}
-        result.update(new_timetable)
-        main_timetable.append(result)
+        subjects = []
+        TimeTable = {}
+
+        for period, subject in zip(range(4),subjects_norm):
+            Subject = {}
+            Subject["period"] = period+1
+            Subject["subject"] = subject
+            subjects.append(Subject)
+
+        TimeTable["subjects"] = subjects
+        TimeTable["date"] = date
+        main_timetable.append(TimeTable)
     
-    post_items["main_timetabl"] = main_timetable
+    TimeTables["main_timetabl"] = main_timetable
 
 # 結果表示
 for date, info in diff.items():
@@ -206,7 +213,11 @@ app = Flask(__name__)
 @app.route("/timetable", methods=["GET"])
 
 def handle_get():
-    return jsonify(post_items)
+    return Response(
+    json.dumps(TimeTables, ensure_ascii=False, sort_keys=False),
+    mimetype='application/json'
+)
+
 
 if __name__ == "__main__":
     # 0.0.0.0 にすると外部（VPS）からアクセス可能
