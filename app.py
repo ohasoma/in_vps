@@ -198,7 +198,7 @@ for date, subjects in timetable.items():
         TimeTable["date"] = date
         main_timetable.append(TimeTable)
     
-    TimeTables["main_timetabl"] = main_timetable
+    TimeTables["main_timetable"] = main_timetable
 
 # 結果表示
 for date, info in diff.items():
