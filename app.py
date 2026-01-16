@@ -31,11 +31,11 @@ options = Options()
 options.add_argument("--headless=new")  # 新しいヘッドレスモード
 options.add_argument("--no-sandbox")  # root 実行時に必須
 options.add_argument("--disable-dev-shm-usage")  # VPS では必須
-options.add_argument("--disable-gpu")
-options.add_argument("--disable-software-rasterizer")
-options.add_argument("--window-size=1920,1080")
+options.add_argument("--disable-gpu") #GPU無効化
+options.add_argument("--disable-software-rasterizer")# ソフトウェアによる描画処理を無効化。GPU がない環境での描画エラーを防ぐ。
+options.add_argument("--window-size=1920,1080") #- 仮想ブラウザの画面サイズを指定。
 
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(options=options)#設定したオプションをChromeに渡す
 
 
 # -----------------------------
@@ -188,6 +188,8 @@ for date, subjects in timetable.items():
             "actual": subjects_norm,
             "expected": expected_norm,
         }
+
+        subjects_norm = [s[:-4] for s in subjects_norm] #(3E)を消す
 
         subjects = []
         TimeTable = {}
