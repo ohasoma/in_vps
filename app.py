@@ -6,9 +6,8 @@ from flask import Response
 import time
 from bs4 import BeautifulSoup
 import copy
-import datetime
 import re
-from datetime import datetime, timezone, timedelta
+from datetime import date
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
 import os
@@ -107,14 +106,14 @@ if current_date and buffer:
 
 driver.quit()
 
-for date in timetable:
-    timetable[date] = timetable[date][::2]
+for d in timetable:
+    timetable[d] = timetable[d][::2]
 
 # -----------------------------
 # 6. 結果を表示
 # -----------------------------
-for date, subjects in timetable.items():
-    print(f"=== {date} ===")
+for d, subjects in timetable.items():
+    print(f"=== {d} ===")
     for i, sub in enumerate(subjects, start=1):
         print(f"{i}コマ目: {sub}")
     print()
@@ -157,18 +156,16 @@ def normalize(s):
 
     return s
 
-# 日本時間（UTC+9）
-JST = timezone(timedelta(hours=9))
-
-now = datetime.now(JST)
-formatted = now.isoformat(timespec="seconds")
+#時間取得
+today = date.today()
+Day = today.strftime("%Y-%m-%d")
 
 diff = {}
-TimeTables = {"genereted_at":formatted}
+TimeTables = {"genereted_at":Day}
 main_timetable = []
 
-for date, subjects in timetable.items():
-    weekday = get_weekday_from_tail(date)
+for d, subjects in timetable.items():
+    weekday = get_weekday_from_tail(d)
 
     # 土日スキップ
     if weekday in ["土", "日"]:
@@ -184,7 +181,7 @@ for date, subjects in timetable.items():
 
     # 完全一致チェック
     if subjects_norm != expected_norm:
-        diff[date] = {
+        diff[d] = {
             "actual": subjects_norm,
             "expected": expected_norm,
         }
@@ -201,14 +198,14 @@ for date, subjects in timetable.items():
             subjects.append(Subject)
 
         TimeTable["subjects"] = subjects
-        TimeTable["date"] = date
+        TimeTable["date"] = d
         main_timetable.append(TimeTable)
     
     TimeTables["main_timetable"] = main_timetable
 
 # 結果表示
-for date, info in diff.items():
-    print(f"=== {date} ===")
+for d, info in diff.items():
+    print(f"=== {d} ===")
     print("実際:", info["actual"])
     print("正しい:", info["expected"])
     print()
