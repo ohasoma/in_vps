@@ -161,7 +161,7 @@ today = date.today()
 Day = today.strftime("%Y-%m-%d")
 
 diff = {}
-TimeTables = {"genereted_at":Day}
+TimeTables = {"generated_at":Day}
 main_timetable = []
 
 for d, subjects in timetable.items():
