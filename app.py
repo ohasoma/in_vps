@@ -7,7 +7,8 @@ import time
 from bs4 import BeautifulSoup
 import copy
 import re
-from datetime import date
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
 import os
@@ -157,11 +158,12 @@ def normalize(s):
     return s
 
 #時間取得
-today = date.today()
-Day = today.strftime("%Y-%m-%d")
+now_jst = datetime.now(ZoneInfo("Asia/Tokyo"))
+formatted_time = now_jst.isoformat(timespec='seconds')
+
 
 diff = {}
-TimeTables = {"generated_at":Day}
+TimeTables = {"generated_at":formatted_time}
 main_timetable = []
 
 for d, subjects in timetable.items():
@@ -198,7 +200,13 @@ for d, subjects in timetable.items():
             subjects.append(Subject)
 
         TimeTable["subjects"] = subjects
-        TimeTable["date"] = d
+
+        numders = re.findall(r"\d+", d)
+        month = int(numders[0])
+        day = int(numders[1])
+        year = datetime.now().year
+
+        TimeTable["date"] = f"{year}-{month:02d}-{day:02d}"
         main_timetable.append(TimeTable)
     
     TimeTables["main_timetable"] = main_timetable
