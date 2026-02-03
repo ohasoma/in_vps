@@ -1,8 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from flask import Flask
+from flask import Flask,Response
 import json
-from flask import Response
 import time
 from bs4 import BeautifulSoup
 import copy
@@ -188,8 +187,7 @@ for d, subjects in timetable.items():
             "expected": expected_norm,
         }
 
-        subjects_norm = [s[:-4] for s in subjects_norm] #(3E)を消す
-
+        subjects_norm = [s.replace("(3E)","") for s in subjects_norm] #(3E)を消す
         subjects = []
         TimeTable = {}
 
