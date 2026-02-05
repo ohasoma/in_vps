@@ -1,1 +1,1 @@
-vpsの中に置くやつ
+vpsにgoogle chromeをインストールしましょう
