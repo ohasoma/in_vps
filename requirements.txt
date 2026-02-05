@@ -1,1 +1,4 @@
-pip install selenium flask beautifulsoup4 python-dotenv
+beautifulsoup4==4.14.3
+Flask==3.1.2
+python-dotenv==1.2.1
+selenium==4.40.0
