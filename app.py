@@ -153,7 +153,7 @@ def normalize(s):
 
     # 余分なスペース削除
     s = re.sub(r"\s+", "", s)
-
+    
     return s
 
 #時間取得
